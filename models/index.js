@@ -28,6 +28,15 @@ let Page = db.define('page', {
     route() {
       return '/wiki/' + this.urlTitle;
     }
+  },
+  hooks: {
+    beforeValidate: (title) => {
+      if(title){
+        Page.title.replace(/\s+/g, '_').replace(/\W/g, '');
+      } else {
+        return Math.random().toString(36).substring(2, 7);
+      }
+    }
   }
 });
 

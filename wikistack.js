@@ -14,9 +14,12 @@ var env = nunjucks.configure('views', {noCache: true});
 app.set('view engine', 'html');
 // when res.render works with html files, have it use nunjucks to do so
 app.engine('html', nunjucks.render);
+app.use(morgan('dev'));
 
 app.use(express.static('public'));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 //because the subroutes not working, have to require it each separately into the app.js file
 app.get('/', (req, res) => {
     res.render('index');
