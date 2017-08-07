@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const nunjucks = require("nunjucks");
 const models = require('./models');
+const routes = require('./routes/index');
 
 
 // point nunjucks to the directory containing templates and turn off caching; configure returns an Environment
@@ -15,6 +16,14 @@ app.set('view engine', 'html');
 app.engine('html', nunjucks.render);
 
 app.use(express.static('public'));
+
+//because the subroutes not working, have to require it each separately into the app.js file
+app.get('/', (req, res) => {
+    res.render('index');
+})
+app.use('/wiki', require('./routes/wiki'));
+app.use('/user', require('./routes/user'));
+
 
 // models.User.sync({})
 // .then(function () {
@@ -30,11 +39,11 @@ app.use(express.static('public'));
 
 
 // make sure you are exporting your db from your models file
-models.db.sync()
+models.db.sync({force:true})
 .then(function () {
     // make sure to replace the name below with your express app
     app.listen(3000, function () {
-        console.log('Server is listening on port 3001!');
+        console.log('Server is listening on port 3000!');
     });
 })
 .catch(console.error);
